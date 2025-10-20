@@ -12,8 +12,8 @@ const categoryInput = document.getElementById("newQuoteCategory");
 const newQuoteBtn = document.getElementById("newQuote");
 const addQuoteBtn = document.getElementById("addQuoteBtn");
 
-// Function to display a random quote
-function showRandomQuote() {
+// Function to display a random quote (renamed as required)
+function displayRandomQuote() {
   // Clear previous content
   while (quoteDisplay.firstChild) {
     quoteDisplay.removeChild(quoteDisplay.firstChild);
@@ -49,10 +49,8 @@ function addQuote() {
     return;
   }
 
-  // Add new quote to the array
   quotes.push({ text, category });
 
-  // Clear input fields
   textInput.value = "";
   categoryInput.value = "";
 
@@ -60,5 +58,5 @@ function addQuote() {
 }
 
 // Event listeners
-newQuoteBtn.addEventListener("click", showRandomQuote);
+newQuoteBtn.addEventListener("click", displayRandomQuote);
 addQuoteBtn.addEventListener("click", addQuote);
