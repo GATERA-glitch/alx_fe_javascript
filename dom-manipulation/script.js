@@ -5,22 +5,42 @@ let quotes = [
   { text: "Do what you can, with what you have, where you are.", category: "Action" }
 ];
 
+// References to DOM elements
+const quoteDisplay = document.getElementById("quoteDisplay");
+const textInput = document.getElementById("newQuoteText");
+const categoryInput = document.getElementById("newQuoteCategory");
+const newQuoteBtn = document.getElementById("newQuote");
+const addQuoteBtn = document.getElementById("addQuoteBtn");
+
 // Function to display a random quote
 function showRandomQuote() {
+  // Clear previous content
+  while (quoteDisplay.firstChild) {
+    quoteDisplay.removeChild(quoteDisplay.firstChild);
+  }
+
   if (quotes.length === 0) {
-    document.getElementById("quoteDisplay").innerText = "No quotes available.";
+    const message = document.createElement("p");
+    message.textContent = "No quotes available.";
+    quoteDisplay.appendChild(message);
     return;
   }
 
   const randomIndex = Math.floor(Math.random() * quotes.length);
   const quote = quotes[randomIndex];
-  document.getElementById("quoteDisplay").innerText = `"${quote.text}" — ${quote.category}`;
+
+  const quoteText = document.createElement("p");
+  quoteText.textContent = `"${quote.text}"`;
+
+  const quoteCategory = document.createElement("small");
+  quoteCategory.textContent = `— ${quote.category}`;
+
+  quoteDisplay.appendChild(quoteText);
+  quoteDisplay.appendChild(quoteCategory);
 }
 
 // Function to add a new quote
 function addQuote() {
-  const textInput = document.getElementById("newQuoteText");
-  const categoryInput = document.getElementById("newQuoteCategory");
   const text = textInput.value.trim();
   const category = categoryInput.value.trim();
 
@@ -40,5 +60,5 @@ function addQuote() {
 }
 
 // Event listeners
-document.getElementById("newQuote").addEventListener("click", showRandomQuote);
-document.getElementById("addQuoteBtn").addEventListener("click", addQuote);
+newQuoteBtn.addEventListener("click", showRandomQuote);
+addQuoteBtn.addEventListener("click", addQuote);
