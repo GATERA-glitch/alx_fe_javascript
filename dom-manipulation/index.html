@@ -1,22 +1,46 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Dynamic Quote Generator</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <h1>Dynamic Quote Generator</h1>
+  <div class="wrap">
+    <header>
+      <h1>Dynamic Quote Generator</h1>
+      <div class="muted">Persist with <strong>localStorage</strong> • Temp prefs in <strong>sessionStorage</strong></div>
+    </header>
 
-  <div id="quoteDisplay"></div>
-  <button id="newQuote">Show New Quote</button>
+    <div class="card">
+      <form id="addForm">
+        <input id="quoteText" type="text" placeholder="Quote text" required />
+        <input id="quoteAuthor" type="text" placeholder="Author (optional)" />
+        <button type="submit">Add Quote</button>
+        <div class="muted tip">Tip: quotes are saved automatically to <code>localStorage</code>.</div>
+      </form>
 
-  <div>
-    <input id="newQuoteText" type="text" placeholder="Enter a new quote" />
-    <input id="newQuoteCategory" type="text" placeholder="Enter quote category" />
-    <button id="addQuoteBtn" onclick="addQuote()">Add Quote</button>
+      <div class="controls">
+        <button id="exportBtn" class="btn-ghost small">Export JSON</button>
+        <label for="importFile" class="btn-ghost small" title="Import JSON file">Import JSON</label>
+        <input type="file" id="importFile" accept=".json,application/json" />
+        <button id="clearLocal" class="btn-ghost small">Clear Local Storage</button>
+        <button id="randomView" class="btn-ghost small">Show Random Quote</button>
+      </div>
+
+      <div class="last-block">
+        <div class="muted">Last viewed quote: <span id="lastViewed" class="last-viewed">—</span></div>
+      </div>
+
+      <ul id="quoteList" aria-live="polite"></ul>
+
+      <footer>
+        <div class="muted">JSON import expects an array of objects <code>[{ "text": "...", "author": "..." }, ...]</code>.</div>
+      </footer>
+    </div>
   </div>
 
-  <script src="script.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>
