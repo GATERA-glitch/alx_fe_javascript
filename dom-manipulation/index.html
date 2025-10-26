@@ -3,36 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dynamic Quote Generator</title>
+<title>Dynamic Quote Generator with Sync</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div class="wrap">
-  <header>
-    <h1>Dynamic Quote Generator</h1>
-    <select id="categoryFilter"></select>
-  </header>
-
-  <div class="card">
-    <form id="addForm">
-      <input type="text" id="quoteText" placeholder="Quote text" required>
-      <input type="text" id="quoteAuthor" placeholder="Author">
-      <input type="text" id="quoteCategory" placeholder="Category">
-      <button type="submit">Add Quote</button>
-    </form>
-
-    <div class="controls">
-      <button id="exportBtn">Export Quotes</button>
-      <label for="importFile" class="btn-ghost small">Import Quotes</label>
-      <input type="file" id="importFile" accept=".json">
-      <button id="clearLocal">Clear Local Quotes</button>
-      <button id="randomView">Random Quote</button>
-      <button id="syncServer">Sync Server</button>
-    </div>
-
-    <ul id="quoteList"></ul>
-    <footer>Last viewed: <span class="last-viewed" id="lastViewed">—</span></footer>
-  </div>
+<div id="container">
+  <div id="quote">Loading quotes...</div>
+  <button id="newQuote">New Quote</button>
+  <button id="addQuote">Add Random Quote</button>
+  <div id="notification"></div>
 </div>
 
 <script src="script.js"></script>
