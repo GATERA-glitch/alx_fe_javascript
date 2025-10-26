@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Dynamic Quote Generator</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
@@ -17,13 +17,17 @@
       <form id="addForm">
         <input id="quoteText" type="text" placeholder="Quote text" required />
         <input id="quoteAuthor" type="text" placeholder="Author (optional)" />
+        <input id="quoteCategory" type="text" placeholder="Category (optional)" />
         <button type="submit">Add Quote</button>
         <div class="muted tip">Tip: quotes are saved automatically to <code>localStorage</code>.</div>
       </form>
 
       <div class="controls">
-        <button id="exportBtn" class="btn-ghost small">Export Quotes</button>
-        <label for="importFile" class="btn-ghost small" title="Import Quotes">Import Quotes</label>
+        <select id="categoryFilter" onchange="filterQuotes()">
+          <option value="all">All Categories</option>
+        </select>
+        <button id="exportBtn" class="btn-ghost small">Export JSON</button>
+        <label for="importFile" class="btn-ghost small" title="Import JSON file">Import JSON</label>
         <input type="file" id="importFile" accept=".json,application/json" />
         <button id="clearLocal" class="btn-ghost small">Clear Local Storage</button>
         <button id="randomView" class="btn-ghost small">Show Random Quote</button>
@@ -36,11 +40,11 @@
       <ul id="quoteList" aria-live="polite"></ul>
 
       <footer>
-        <div class="muted">JSON import expects an array of objects <code>[{ "text": "...", "author": "..." }, ...]</code>.</div>
+        <div class="muted">JSON import expects an array of objects <code>[{ "text": "...", "author": "...", "category": "..." }, ...]</code>.</div>
       </footer>
     </div>
   </div>
 
-  <script src="app.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
