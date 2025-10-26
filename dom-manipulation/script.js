@@ -89,3 +89,94 @@ document.getElementById('addQuote').addEventListener('click', addRandomQuote);
   // Periodic sync every 10 seconds
   setInterval(syncWithServer, 10000);
 })();
+// Server endpoint (mock API)
+const SERVER_URL = 'https://jsonplaceholder.typicode.com/posts';
+
+// Local storage key
+const LOCAL_KEY = 'quotes';
+
+// Quotes array
+let quotes = [];
+
+// Notification element
+const notification = document.getElementById('notification');
+
+// Fetch quotes from the server
+async function fetchQuotesFromServer() {
+  try {
+    const response = await fetch(SERVER_URL);
+    const data = await response.json();
+    // Take first 5 titles for demo
+    return data.slice(0, 5).map(item => item.title);
+  } catch (err) {
+    console.error('Error fetching from server:', err);
+    return [];
+  }
+}
+
+// Post a new quote to the server
+async function postQuoteToServer(quote) {
+  try {
+    await fetch(SERVER_URL, {
+      method: 'POST', // Must include method POST
+      headers: {
+        'Content-Type': 'application/json' // Must include Content-Type
+      },
+      body: JSON.stringify({ title: quote }) // Send JSON data
+    });
+    console.log('Quote posted to server:', quote);
+  } catch (err) {
+    console.error('Error posting to server:', err);
+  }
+}
+
+// Sync local data with server
+async function syncWithServer() {
+  const serverQuotes = await fetchQuotesFromServer();
+  const localQuotes = JSON.parse(localStorage.getItem(LOCAL_KEY)) || [];
+
+  // Merge quotes (server takes precedence)
+  const mergedQuotes = Array.from(new Set([...serverQuotes, ...localQuotes]));
+
+  if (mergedQuotes.length !== localQuotes.length) {
+    notification.textContent = 'Quotes updated from server!';
+  } else {
+    notification.textContent = '';
+  }
+
+  quotes = mergedQuotes;
+  localStorage.setItem(LOCAL_KEY, JSON.stringify(quotes));
+  displayQuote();
+}
+
+// Display a random quote
+function displayQuote() {
+  if (quotes.length === 0) {
+    document.getElementById('quote').textContent = 'No quotes available.';
+    return;
+  }
+  const randomIndex = Math.floor(Math.random() * quotes.length);
+  document.getElementById('quote').textContent = quotes[randomIndex];
+}
+
+// Add a new random quote locally and post to server
+function addRandomQuote() {
+  const newQuote = 'New quote ' + Math.floor(Math.random() * 1000);
+  quotes.push(newQuote);
+  localStorage.setItem(LOCAL_KEY, JSON.stringify(quotes));
+  displayQuote();
+  notification.textContent = 'New quote added locally!';
+  postQuoteToServer(newQuote); // POST the new quote to server
+}
+
+// Event listeners
+document.getElementById('newQuote').addEventListener('click', displayQuote);
+document.getElementById('addQuote').addEventListener('click', addRandomQuote);
+
+// Initial load
+(function init() {
+  quotes = JSON.parse(localStorage.getItem(LOCAL_KEY)) || [];
+  displayQuote();
+  syncWithServer(); // Initial sync
+  setInterval(syncWithServer, 10000); // Periodic sync every 10s
+})();
