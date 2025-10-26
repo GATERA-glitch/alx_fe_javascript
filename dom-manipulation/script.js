@@ -39,7 +39,6 @@ function loadQuotes() {
       text: String(item.text || '').trim(),
       author: item.author ? String(item.author).trim() : ''
     })).filter(q => q.text.length > 0);
-    // if nothing valid, fallback to defaults
     if (quotes.length === 0) {
       quotes = [...defaultQuotes];
       saveQuotes();
@@ -121,7 +120,6 @@ function deleteQuote(index) {
 function viewQuote(index) {
   if (index < 0 || index >= quotes.length) return;
   const q = quotes[index];
-  // simple modal replacement: alert
   alert(`"${q.text}"\n\n— ${q.author || 'unknown'}`);
   sessionStorage.setItem(SESSION_KEY, String(index));
   updateLastViewedUI();
