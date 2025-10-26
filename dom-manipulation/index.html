@@ -1,54 +1,40 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Dynamic Quote Generator</title>
-  <link rel="stylesheet" href="styles.css" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dynamic Quote Generator</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="wrap">
-    <header>
-      <h1>Dynamic Quote Generator</h1>
-      <div class="muted">Persist with <strong>localStorage</strong> • Temp prefs in <strong>sessionStorage</strong></div>
-    </header>
+<div class="wrap">
+  <header>
+    <h1>Dynamic Quote Generator</h1>
+    <select id="categoryFilter"></select>
+  </header>
 
-    <div class="card">
-      <form id="addForm">
-        <input id="quoteText" type="text" placeholder="Quote text" required />
-        <input id="quoteAuthor" type="text" placeholder="Author (optional)" />
-        <input id="quoteCategory" type="text" placeholder="Category (optional)" />
-        <button type="submit">Add Quote</button>
-        <div class="muted tip">Tip: quotes are saved automatically to <code>localStorage</code>.</div>
-      </form>
+  <div class="card">
+    <form id="addForm">
+      <input type="text" id="quoteText" placeholder="Quote text" required>
+      <input type="text" id="quoteAuthor" placeholder="Author">
+      <input type="text" id="quoteCategory" placeholder="Category">
+      <button type="submit">Add Quote</button>
+    </form>
 
-      <div class="controls">
-        <button id="exportBtn" class="btn-ghost small">Export JSON</button>
-        <label for="importFile" class="btn-ghost small" title="Import JSON file">Import JSON</label>
-        <input type="file" id="importFile" accept=".json,application/json" />
-        <button id="clearLocal" class="btn-ghost small">Clear Local Storage</button>
-        <button id="randomView" class="btn-ghost small">Show Random Quote</button>
-        <button id="syncBtn" class="btn-ghost small">Sync with Server</button>
-      </div>
-
-      <div class="controls">
-        <select id="categoryFilter" onchange="filterQuotes()">
-          <option value="all">All Categories</option>
-        </select>
-      </div>
-
-      <div class="last-block">
-        <div class="muted">Last viewed quote: <span id="lastViewed" class="last-viewed">—</span></div>
-      </div>
-
-      <ul id="quoteList" aria-live="polite"></ul>
-
-      <footer>
-        <div class="muted">JSON import expects an array of objects <code>[{ "text": "...", "author": "...", "category": "..." }, ...]</code>.</div>
-      </footer>
+    <div class="controls">
+      <button id="exportBtn">Export Quotes</button>
+      <label for="importFile" class="btn-ghost small">Import Quotes</label>
+      <input type="file" id="importFile" accept=".json">
+      <button id="clearLocal">Clear Local Quotes</button>
+      <button id="randomView">Random Quote</button>
+      <button id="syncServer">Sync Server</button>
     </div>
-  </div>
 
-  <script src="script.js"></script>
+    <ul id="quoteList"></ul>
+    <footer>Last viewed: <span class="last-viewed" id="lastViewed">—</span></footer>
+  </div>
+</div>
+
+<script src="script.js"></script>
 </body>
 </html>
