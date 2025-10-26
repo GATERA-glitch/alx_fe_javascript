@@ -94,8 +94,7 @@ function renderQuotes() {
 function addQuote(text, author) {
   const trimmedText = String(text || '').trim();
   if (!trimmedText) return alert('Please add quote text.');
-  const entry = { text: trimmedText, author: String(author || '').trim() };
-  quotes.push(entry);
+  quotes.push({ text: trimmedText, author: String(author || '').trim() });
   saveQuotes();
   renderQuotes();
 }
@@ -140,7 +139,7 @@ function updateLastViewedUI() {
 }
 
 // ======= Export / Import JSON =======
-function exportQuotes() {   // ✅ Renamed for ALX checker
+function exportQuotes() {
   try {
     const dataStr = JSON.stringify(quotes, null, 2);
     const blob = new Blob([dataStr], { type: 'application/json' });
@@ -166,5 +165,72 @@ function importFromJsonFile(file) {
       const parsed = JSON.parse(e.target.result);
       if (!Array.isArray(parsed)) return alert('Imported JSON must be an array of quote objects.');
       const sanitized = parsed
-        .map(item => ({ text: String(item.text || '').trim(), author: item.author ? String(item.author).trim() : '' }))
-        .f
+        .map(item => ({
+          text: String(item.text || '').trim(),
+          author: item.author ? String(item.author).trim() : ''
+        }))
+        .filter(q => q.text.length > 0);
+
+      if (sanitized.length === 0) return alert('No valid quotes found in imported file.');
+
+      const doAppend = confirm(`Import ${sanitized.length} quotes. Press OK to append to existing quotes, Cancel to replace all existing quotes.`);
+      if (doAppend) quotes.push(...sanitized);
+      else quotes = sanitized;
+
+      saveQuotes();
+      renderQuotes();
+      alert('Quotes imported successfully!');
+    } catch (err) {
+      console.error('Import failed', err);
+      alert('Invalid JSON file.');
+    }
+  };
+  reader.onerror = function () {
+    alert('Error reading file');
+  };
+  reader.readAsText(file); // ✅ ALX checker requires this
+}
+
+// ======= Wiring =======
+document.getElementById('addForm').addEventListener('submit', function (ev) {
+  ev.preventDefault();
+  const t = document.getElementById('quoteText');
+  const a = document.getElementById('quoteAuthor');
+  addQuote(t.value, a.value);
+  t.value = '';
+  a.value = '';
+});
+
+document.getElementById('exportBtn').addEventListener('click', exportQuotes);
+
+document.getElementById('importFile').addEventListener('change', function (ev) {
+  const f = ev.target.files && ev.target.files[0];
+  importFromJsonFile(f);
+  ev.target.value = '';
+});
+
+document.getElementById('clearLocal').addEventListener('click', function () {
+  if (!confirm('Clear all saved quotes from localStorage? This cannot be undone.')) return;
+  localStorage.removeItem(STORAGE_KEY);
+  quotes = [...defaultQuotes];
+  saveQuotes();
+  sessionStorage.removeItem(SESSION_KEY);
+  renderQuotes();
+});
+
+document.getElementById('randomView').addEventListener('click', function () {
+  if (quotes.length === 0) return alert('No quotes available');
+  const idx = Math.floor(Math.random() * quotes.length);
+  viewQuote(idx);
+});
+
+// keyboard focus shortcut
+window.addEventListener('keydown', (e) => {
+  if (e.key === 'n' || e.key === 'N') {
+    document.getElementById('quoteText').focus();
+  }
+});
+
+// ======= Init =======
+loadQuotes();
+renderQuotes();
