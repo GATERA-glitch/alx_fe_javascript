@@ -22,6 +22,23 @@ async function fetchQuotesFromServer() {
   }
 }
 
+// Post a new quote to the server
+async function postQuoteToServer(quote) {
+  try {
+    const response = await fetch(SERVER_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ title: quote })
+    });
+    const data = await response.json();
+    console.log('Quote posted to server:', data);
+  } catch (err) {
+    console.error('Error posting to server', err);
+  }
+}
+
 // Sync function
 async function syncWithServer() {
   const serverQuotes = await fetchQuotesFromServer();
@@ -50,13 +67,14 @@ function displayQuote() {
   document.getElementById('quote').textContent = quotes[randomIndex];
 }
 
-// Add a new random quote locally
+// Add a new random quote locally and post to server
 function addRandomQuote() {
   const newQuote = 'New quote ' + Math.floor(Math.random() * 1000);
   quotes.push(newQuote);
   localStorage.setItem(LOCAL_KEY, JSON.stringify(quotes));
   notification.textContent = 'New quote added locally!';
   displayQuote();
+  postQuoteToServer(newQuote); // POST to server
 }
 
 // Event listeners
