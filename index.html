@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dynamic Quote Generator - Web Storage & JSON</title>
+</head>
+<body>
+  <h1>Dynamic Quote Generator</h1>
+
+  <div id="quoteDisplay">Click "Show New Quote" to begin.</div>
+  <input type="text" id="newQuote" placeholder="Enter a new quote" />
+  <button id="addQuote">Add Quote</button>
+  <button id="showQuote">Show New Quote</button>
+
+  <br><br>
+  <!-- Export / Import Section -->
+  <button id="exportQuotes">Export Quotes (JSON)</button>
+  <input type="file" id="importFile" accept=".json" onchange="importFromJsonFile(event)" />
+
+  <script>
+    // ========== Variables ==========
+    let quotes = [];
+
+    // ========== Load from Local Storage ==========
+    function loadQuotes() {
+      const storedQuotes = localStorage.getItem('quotes');
+      if (storedQuotes) {
+        quotes = JSON.parse(storedQuotes);
+      } else {
+        quotes = [
+          "The best way to predict the future is to create it.",
+          "Do something today that your future self will thank you for.",
+          "Success is not final, failure is not fatal: it is the courage to continue that counts."
+        ];
+        saveQuotes();
+      }
+    }
+
+    // ========== Save to Local Storage ==========
+    function saveQuotes() {
+      localStorage.setItem('quotes', JSON.stringify(quotes));
+    }
+
+    // ========== Show Random Quote ==========
+    function showQuote() {
+      if (quotes.length === 0) return;
+      const randomIndex = Math.floor(Math.random() * quotes.length);
+      document.getElementById('quoteDisplay').textContent = quotes[randomIndex];
+      sessionStorage.setItem('lastViewedQuote', quotes[randomIndex]);
+    }
+
+    // ========== Add New Quote ==========
+    document.getElementById('addQuote').addEventListener('click', () => {
+      const newQuote = document.getElementById('newQuote').value.trim();
+      if (newQuote) {
+        quotes.push(newQuote);
+        saveQuotes();
+        document.getElementById('newQuote').value = '';
+        alert('Quote added successfully!');
+      }
+    });
+
+    // ========== Show Quote Button ==========
+    document.getElementById('showQuote').addEventListener('click', showQuote);
+
+    // ========== Export Quotes ==========
+    function exportToJsonFile() {
+      const dataStr = JSON.stringify(quotes, null, 2);
+      const blob = new Blob([dataStr], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'quotes.json';
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    document.getElementById('exportQuotes').addEventListener('click', exportToJsonFile);
+
+    // ========== Import Quotes ==========
+    function importFromJsonFile(event) {
+      const fileReader = new FileReader();
+      fileReader.onload = function(e) {
+        const importedQuotes = JSON.parse(e.target.result);
+        quotes.push(...importedQuotes);
+        saveQuotes();
+        alert('Quotes imported successfully!');
+      };
+      fileReader.readAsText(event.target.files[0]);
+    }
+
+    // Initialize app
+    loadQuotes();
+  </script>
+</body>
+</html>
+
+<h1>Dynamic Quote Generator</h1>
+<input type="text" id="newQuote" placeholder="Enter a new quote" />
+<button id="addQuote">Add Quote</button>
+
+<ul id="quoteList"></ul>
+
+<!-- Export / Import Section -->
+<button id="exportBtn">Export Quotes (JSON)</button>
+<input type="file" id="importFile" accept=".json" />
+<h1>Dynamic Quote Generator</h1>
+
+<h1>Dynamic Quote Generator</h1>
+
+<!-- Filter by Category -->
+<select id="categoryFilter" onchange="filterQuotes()">
+  <option value="all">All Categories</option>
+</select>
+
+<!-- Add Quote -->
+<input type="text" id="newQuote" placeholder="Enter a new quote" />
+<input type="text" id="newCategory" placeholder="Enter category" />
+<button id="addQuote">Add Quote</button>
+
+<ul id="quoteList"></ul>
+
+<!-- Export / Import Section -->
+<button id="exportBtn">Export Quotes (JSON)</button>
+<input type="file" id="importFile" accept=".json" />
+
+<button id="syncButton">Sync Quotes</button>
